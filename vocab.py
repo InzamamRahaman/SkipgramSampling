@@ -9,6 +9,7 @@ class Vocabulary(object):
         self.id2word = dict()
         self.word2id = dict()
         self.neighbors = defaultdict(set)
+        self.neighbors_ids = defaultdict(set)
         self.count = 0
         self.frequencies = defaultdict(int)
         self.array = FixedArray(window_size)
@@ -17,12 +18,15 @@ class Vocabulary(object):
         def neighbors_callback(y, x, arr):
             self.neighbors[y].add(x)
             self.neighbors[x].add(y)
+            it = arr.get_distinct_elements()
+            for i in it:
+                self.neighbors[y].add(i)
+                self.neighbors[x].add(i)
 
-        print('Processing')
         for idx, word in enumerate(contents):
             if word not in self.words:
-                self.id2word[id] = word
-                self.word2id[word] = id
+                self.id2word[self.count + 1] = word
+                self.word2id[word] = self.count + 1
                 self.count += 1
                 self.words.add(word)
             self.frequencies[word] += 1
@@ -35,7 +39,21 @@ class Vocabulary(object):
         return self.word2id[word]
 
     def get_neighbors(self, word):
+        if isinstance(word, int):
+            return self.neighbors[self.id2word[word]]
         return self.neighbors[word]
+
+    def get_neighbors_ids(self, word):
+        if isinstance(word, int):
+            word = self.id2word[word]
+        if word not in self.neighbors_ids:
+            arr = set()
+            neighbors = self.get_neighbors(word)
+            for neighbor in neighbors:
+                arr.add(self.word2id[neighbor])
+            self.neighbors_ids[word] = arr
+        return self.neighbors_ids[word]
+
 
     def __len__(self):
         return self.count

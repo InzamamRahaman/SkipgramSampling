@@ -26,3 +26,4 @@ class FixedArray(object):
 
     def get_distinct_elements(self):
         return set(self.contents)
+

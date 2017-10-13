@@ -1,5 +1,6 @@
 
 from vocab import Vocabulary
+from sampler import Sampler
 
 corpus = """
 The Georgia Institute of Technology (commonly referred to as Georgia Tech, Tech, or GT) is a public research university in Atlanta, Georgia, in the United States. It is a part of the University System of Georgia and has satellite campuses in Savannah, Georgia; Metz, France; Athlone, Ireland; Shenzhen, China; and Singapore.
@@ -10,6 +11,5 @@ The educational institution was founded in 1885 as the Georgia School of Technol
 content = corpus.split()
 content = map(lambda x: x.lower(), content)
 content = list(content)
-v = Vocabulary(content, 2)
-print(v.get_neighbors('technology'))
-print(len(v))
+sam = Sampler(content, 2)
+print(sam.batch_sample())
