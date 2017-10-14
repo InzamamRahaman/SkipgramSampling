@@ -3,9 +3,9 @@ import numpy as np
 
 import random
 
-from vocab import Vocabulary
+from .vocab import Vocabulary
 
-from unigram import UnigramDistribution
+from .unigram import UnigramDistribution
 
 class Sampler(object):
 

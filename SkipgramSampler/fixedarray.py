@@ -1,6 +1,9 @@
 from collections import deque
 
 class FixedArray(object):
+    """
+    Object acts a queue of fixed length
+    """
 
     def __init__(self, limit):
         self.count = 0

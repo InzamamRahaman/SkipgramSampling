@@ -1,5 +1,5 @@
 from collections import defaultdict, Counter
-from fixedarray import FixedArray
+from .fixedarray import FixedArray
 
 
 class Vocabulary(object):
