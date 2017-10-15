@@ -2,6 +2,9 @@ from distutils.core import setup
 
 setup(
     name='SkipgramSampler',
+    author='Inzamam Rahaman',
+    url='https://github.com/InzamamRahaman/SkipgramSampling',
+    download_url='https://github.com/InzamamRahaman/SkipgramSampling/archive/master.zip',
     version='0.1dev',
     packages=['SkipgramSampler'],
     license='MIT',
