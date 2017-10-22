@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 
 class UnigramDistribution(object):
@@ -34,6 +35,7 @@ class UnigramDistribution(object):
         self.probs /= normalizing_const
 
     def sample(self, num=1, with_replacement=False):
+        # print('Sampling from Unigram....')
         """
         Samples from this unigram distribution
         Parameters
@@ -49,8 +51,23 @@ class UnigramDistribution(object):
             iterable{int}
             The indicies/ids of the randomly selected elements
         """
-        selected = np.random.choice(self.vocab_size + 1, num, p=self.probs, replace=with_replacement)
-        if num == 1:
-            selected = selected[0]
+        selected = np.random.choice(self.vocab_size + 1, size=num, p=self.probs, replace=with_replacement)
+        # if num == 1:
+        #     selected = selected[0]
         return selected
+
+
+    def sample_for_negatives(self, avoid, num=1):
+        temp_probs = np.copy(self.probs)
+        for av in avoid:
+            temp_probs[av] = 0
+        normalizer = np.sum(temp_probs)
+        # print(self.probs)
+        # print(temp_probs)
+        # print(normalizer)
+        probs = temp_probs / normalizer
+        selected = np.random.choice(self.vocab_size + 1, size=num, p=probs, replace=True)
+        return selected
+
+
 

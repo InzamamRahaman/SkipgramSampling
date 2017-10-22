@@ -28,17 +28,18 @@ class Sampler(object):
         return elem
 
     def sample_negative_words(self, centre_word_idx, num=1):
-        arr = []
-        selected = set()
-        count = 0
-        neighbors = self.vocab.get_neighbors_ids(centre_word_idx)
-        while count < num:
-            jdx = self.noise_distribution.sample()
-            while jdx in neighbors or jdx == centre_word_idx or jdx in selected:
-                jdx = self.noise_distribution.sample()
-            arr.append(jdx)
-            selected.add(jdx)
-            count += 1
+        #neighbors = self.vocab.get_neighbors_ids(centre_word_idx)
+        arr = self.noise_distribution.sample(num=num)
+        # selected = set(neighbors)
+        # selected.add(centre_word_idx)
+        # arr = self.noise_distribution.sample_for_negatives(selected, num)
+        # while count < num:
+        #     jdx = self.noise_distribution.sample()[0]
+        #     while jdx in neighbors or jdx == centre_word_idx or jdx in selected:
+        #         jdx = self.noise_distribution.sample()
+        #     arr.append(jdx)
+        #     selected.add(jdx)
+        #     count += 1
         return arr
 
     def batch_sample(self, batch_size=2, negative_samples=8):
@@ -49,3 +50,8 @@ class Sampler(object):
             negatives = self.sample_negative_words(centre_word_idx, negative_samples)
             arr.append((centre_word_idx, neighbor, negatives))
         return arr
+
+    def get_pairs(self, negative_samples=8):
+        for centre_word_idx, neighbor in self.vocab.get_pairs():
+            negatives = self.sample_negative_words(centre_word_idx, negative_samples)
+            yield (centre_word_idx, neighbor, negatives)

@@ -47,6 +47,13 @@ class Vocabulary(object):
     def id2word(self, word_id):
         return self._id2word[word_id]
 
+    def get_pairs(self):
+        for word_id in range(1, self.count + 1):
+            neighbours = self.get_neighbors_ids(word_id)
+            for neighbour in neighbours:
+                yield (word_id, neighbour)
+
+
     def word2id(self, word):
         return self._word2id[word]
 
