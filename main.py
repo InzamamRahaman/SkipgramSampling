@@ -1,7 +1,5 @@
 
-from .vocab import Vocabulary
-from .sampler import Sampler
-from .pytorch_sampler import PyTorchSampler
+from SkipgramSampler import PyTorchSampler
 
 corpus1 = """
 The Georgia Institute of Technology (commonly referred to as Georgia Tech, Tech, or GT) is a public research university in Atlanta, Georgia, in the United States. It is a part of the University System of Georgia and has satellite campuses in Savannah, Georgia; Metz, France; Athlone, Ireland; Shenzhen, China; and Singapore.
@@ -17,4 +15,6 @@ The Battle of Hastings was fought on 14 October 1066 between the Norman-French a
 content = [map(lambda x: x.lower(), corpus1.split()), map(lambda x: x.lower(), corpus2.split())]
 content = list(content)
 sam = PyTorchSampler(content, 2)
-print(sam.batch_sample())
+batch = sam.get_batch()
+for b in batch:
+    print(b)

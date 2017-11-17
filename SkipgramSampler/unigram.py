@@ -1,4 +1,5 @@
 import numpy as np
+import random
 import copy
 
 
@@ -34,40 +35,56 @@ class UnigramDistribution(object):
         normalizing_const = np.sum(self.probs)
         self.probs /= normalizing_const
 
-    def sample(self, num=1, with_replacement=False):
-        # print('Sampling from Unigram....')
-        """
-        Samples from this unigram distribution
-        Parameters
-        ----------
-        num: int, optional
-            The number of elements to sample from this distribution (default is 1)
-        with_replacement: bool, optional
-            Whether sampling from this distribution should be done with or without replacement,
-            (default is False)
-
-        Returns
-        -------
-            iterable{int}
-            The indicies/ids of the randomly selected elements
-        """
-        selected = np.random.choice(self.vocab_size + 1, size=num, p=self.probs, replace=with_replacement)
-        # if num == 1:
-        #     selected = selected[0]
-        return selected
+    def sample(self, num=1, avoid=set(), with_replacement=False):
+        samples = []
+        to_avoid = avoid
+        count = 0
+        while count < num:
+            selection = np.random.choice(self.vocab_size + 1, size=1, p=self.probs)
+            selected = selection[0]
+            if selected not in to_avoid:
+                samples.append(selected)
+                count += 1
+                if not with_replacement:
+                    to_avoid.add(selected)
+        return np.array(samples)
 
 
-    def sample_for_negatives(self, avoid, num=1):
-        temp_probs = np.copy(self.probs)
-        for av in avoid:
-            temp_probs[av] = 0
-        normalizer = np.sum(temp_probs)
-        # print(self.probs)
-        # print(temp_probs)
-        # print(normalizer)
-        probs = temp_probs / normalizer
-        selected = np.random.choice(self.vocab_size + 1, size=num, p=probs, replace=True)
-        return selected
+
+    # def sample(self, num=1, with_replacement=False):
+    #     # print('Sampling from Unigram....')
+    #     """
+    #     Samples from this unigram distribution
+    #     Parameters
+    #     ----------
+    #     num: int, optional
+    #         The number of elements to sample from this distribution (default is 1)
+    #     with_replacement: bool, optional
+    #         Whether sampling from this distribution should be done with or without replacement,
+    #         (default is False)
+    #
+    #     Returns
+    #     -------
+    #         iterable{int}
+    #         The indicies/ids of the randomly selected elements
+    #     """
+    #     selected = np.random.choice(self.vocab_size + 1, size=num, p=self.probs, replace=with_replacement)
+    #     # if num == 1:
+    #     #     selected = selected[0]
+    #     return selected
+
+
+    # def sample_for_negatives(self, avoid, num=1):
+    #     temp_probs = np.copy(self.probs)
+    #     for av in avoid:
+    #         temp_probs[av] = 0
+    #     normalizer = np.sum(temp_probs)
+    #     # print(self.probs)
+    #     # print(temp_probs)
+    #     # print(normalizer)
+    #     probs = temp_probs / normalizer
+    #     selected = np.random.choice(self.vocab_size + 1, size=num, p=probs, replace=True)
+    #     return selected
 
 
 
